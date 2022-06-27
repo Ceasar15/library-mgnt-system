@@ -11,7 +11,7 @@ Minimal [Spring Boot](http://projects.spring.io/spring-boot/) sample app.
 For building and running the application you need:
 
 - [JDK 17](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-- [Maven 3](https://maven.apache.org)
+- [Maven 3.8](https://maven.apache.org)
 
 ## Running the application locally
 
@@ -28,5 +28,6 @@ mvn spring-boot:run
 
 ## Copyright
 
-Released under the Apache License 2.0. See
-the [LICENSE](https://github.com/codecentric/springboot-sample-app/blob/master/LICENSE) file.
+Released under the MIT LICENSE See
+the [LICENSE](https://github.com/Ceasar15/library-mgnt-system/blob/b6f697984a4a58d9025db8b573e69e60d837405a/LICENSE.md)
+file.
