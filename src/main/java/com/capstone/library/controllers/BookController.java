@@ -32,7 +32,7 @@ public class BookController {
     }
 
     @PostMapping("/createBook")
-    public ResponseEntity<Book> createBook(@RequestBody BookRequest bookRequest) {
+    public ResponseEntity<?> createBook(@RequestBody BookRequest bookRequest) {
         try {
             Book new_book = new Book(bookRequest.getTitle(), bookRequest.getAuthor(), true);
             logger.error("Book details" + new_book);
@@ -43,7 +43,6 @@ public class BookController {
             } else {
                 Catalogue bookCatalogue =
                         catalogueRepository.findByCatalogue(String.valueOf(strCatalogue)).orElseThrow(() -> new ResourceNotFoundException("No catalogue found"));
-                return new ResponseEntity<>(new_book, HttpStatus.CREATED);
 
             }
 
@@ -51,6 +50,8 @@ public class BookController {
             logger.error("error: " + e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>(new_book, HttpStatus.CREATED);
+
     }
 
     @GetMapping("/getBook/{id}")
