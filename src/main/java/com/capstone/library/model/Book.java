@@ -8,23 +8,23 @@ import java.util.Set;
 @Table(name = "book")
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     private String title;
 
-    @Column(name = "author", nullable = false)
+    @Column(name = "author")
     private String author;
 
-    @Column(name = "isAvailable", nullable = false)
+    @Column(name = "isAvailable")
     private Boolean isAvailable;
 
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "book_catalogue", joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "catalogue_id"))
+    @JoinTable(name = "book_catalogue", joinColumns = @JoinColumn(name = "book"), inverseJoinColumns =
+    @JoinColumn(name = "catalogue"))
     private Set<Catalogue> catalogue = new HashSet<>();
 
 

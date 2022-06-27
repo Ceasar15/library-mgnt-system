@@ -1,7 +1,6 @@
 package com.capstone.library.payload.request;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Set;
 
 public class BookRequest {
 
@@ -11,9 +10,9 @@ public class BookRequest {
     @NotBlank
     private String author;
 
-    private Set<String> catalogue;
+    private String catalogue;
 
-    public BookRequest(String title, String author, Set<String> catalogue) {
+    public BookRequest(String title, String author, String catalogue) {
         this.title = title;
         this.author = author;
         this.catalogue = catalogue;
@@ -35,11 +34,11 @@ public class BookRequest {
         this.author = author;
     }
 
-    public Set<String> getCatalogue() {
+    public String getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(Set<String> catalogue) {
+    public void setCatalogue(String catalogue) {
         this.catalogue = catalogue;
     }
 

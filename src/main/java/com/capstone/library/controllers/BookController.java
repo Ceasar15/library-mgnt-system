@@ -26,22 +26,17 @@ public class BookController {
     BookRepository bookRepository;
     @Autowired
     CatalogueRepository catalogueRepository;
-    Exception e
-
-    {
-        logger.error("error: " + e);
-        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    } catch(
 
     public BookController(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
-    })
+    }
 
     @PostMapping("/createBook")
     public ResponseEntity<?> createBook(@RequestBody BookRequest bookRequest) {
+        logger.info("boookkkkkk" + bookRequest);
         Book new_book = new Book(bookRequest.getTitle(), bookRequest.getAuthor(), true);
         logger.error("Book details" + new_book);
-        Set<String> strCatalogue = bookRequest.getCatalogue();
+        String strCatalogue = bookRequest.getCatalogue();
         Set<Catalogue> catalogue = new HashSet<>();
         if (strCatalogue == null) {
             return new ResponseEntity<>(new_book, HttpStatus.BAD_REQUEST);
@@ -51,7 +46,9 @@ public class BookController {
             catalogue.add(bookCatalogue);
         }
 
+        logger.error("Book catalogue   : " + catalogue);
         new_book.setCatalogue(catalogue);
+        logger.error("get catalogue" + new_book.getCatalogue());
         bookRepository.save(new_book);
         return new ResponseEntity<>(new_book, HttpStatus.CREATED);
 
