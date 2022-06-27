@@ -1,6 +1,8 @@
 package com.capstone.library.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "book")
@@ -20,9 +22,11 @@ public class Book {
     private Boolean isAvailable;
 
 
-    @ManyToOne
-    @JoinColumn(name = "catalogue_id", nullable = false)
-    private Catalogue catalogue;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "book_catalogue", joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "catalogue_id"))
+    private Set<Catalogue> catalogue = new HashSet<>();
+
 
     public Book() {
 
@@ -66,11 +70,11 @@ public class Book {
         isAvailable = available;
     }
 
-    public Catalogue getCatalogue() {
+    public Set<Catalogue> getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(Catalogue catalogue) {
+    public void setCatalogue(Set<Catalogue> catalogue) {
         this.catalogue = catalogue;
     }
 }
