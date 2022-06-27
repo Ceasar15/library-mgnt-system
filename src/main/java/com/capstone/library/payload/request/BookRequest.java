@@ -13,6 +13,12 @@ public class BookRequest {
 
     private Set<String> catalogue;
 
+    public BookRequest(String title, String author, Set<String> catalogue) {
+        this.title = title;
+        this.author = author;
+        this.catalogue = catalogue;
+    }
+
     public String getTitle() {
         return title;
     }
