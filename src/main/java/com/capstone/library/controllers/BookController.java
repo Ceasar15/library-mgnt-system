@@ -13,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -37,20 +39,16 @@ public class BookController {
         String strCatalogue = bookRequest.getCatalogue();
         Set<Catalogue> catalogue = new HashSet<>();
         if (strCatalogue == null) {
-            return new ResponseEntity<>(new_book, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } else {
             Catalogue bookCatalogue =
-                    catalogueRepository.findByCatalogue(String.valueOf(strCatalogue)).orElseThrow(()
-                    -> new ResourceNotFoundException("No catalogue found"));
+                    catalogueRepository.findByCatalogue(String.valueOf(strCatalogue)).orElseThrow(() -> new ResourceNotFoundException("No catalogue found"));
             catalogue.add(bookCatalogue);
         }
 
-        logger.error("Book catalogue : " + catalogue);
-        logger.error("get catalogue before: " + new_book.getCatalogue());
         new_book.setCatalogue(catalogue);
-        logger.error("get catalogue after: " + new_book.getCatalogue());
-        bookRepository.save(new Book(bookRequest.getTitle(), bookRequest.getAuthor(), true));
-        return new ResponseEntity<>(new_book, HttpStatus.CREATED);
+        Book responseBook = bookRepository.save(new_book);
+        return new ResponseEntity<>(responseBook, HttpStatus.CREATED);
 
     }
 
@@ -64,9 +62,17 @@ public class BookController {
 
 
     @GetMapping("/getAllBooks")
-    public ResponseEntity<Book> getAllBooks() {
-        Book book =
-                bookRepository.findByIsAvailable(true).orElseThrow(() -> new ResourceNotFoundException("Not even one book is available!"));
-        return new ResponseEntity<>(book, HttpStatus.OK);
+    public ResponseEntity<List<Book>> getAllBooks() {
+        try {
+            List<Book> book = new ArrayList<Book>();
+            book = bookRepository.findByIsAvailable(true);
+//                .orElseThrow(() -> new ResourceNotFoundException(
+//                "Not even one book is available!"));
+            return new ResponseEntity<>(book, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
     }
 }

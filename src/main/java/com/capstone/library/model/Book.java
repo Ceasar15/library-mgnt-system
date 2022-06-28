@@ -20,8 +20,6 @@ public class Book {
 
     @Column(name = "isAvailable")
     private Boolean isAvailable;
-
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book_catalogue", joinColumns = @JoinColumn(name = "book"), inverseJoinColumns =
     @JoinColumn(name = "catalogue"))
@@ -36,6 +34,14 @@ public class Book {
         this.title = title;
         this.author = author;
         this.isAvailable = isAvailable;
+    }
+
+    public Book(Long id, String title, String author, Boolean isAvailable, Set<Catalogue> catalogue) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.isAvailable = isAvailable;
+        this.catalogue = catalogue;
     }
 
     public Long getId() {
