@@ -70,6 +70,7 @@ public class Book {
         isAvailable = available;
     }
 
+
     public Set<Catalogue> getCatalogue() {
         return catalogue;
     }

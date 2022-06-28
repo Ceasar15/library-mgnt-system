@@ -33,23 +33,23 @@ public class BookController {
 
     @PostMapping("/createBook")
     public ResponseEntity<?> createBook(@RequestBody BookRequest bookRequest) {
-        logger.info("boookkkkkk" + bookRequest);
         Book new_book = new Book(bookRequest.getTitle(), bookRequest.getAuthor(), true);
-        logger.error("Book details" + new_book);
         String strCatalogue = bookRequest.getCatalogue();
         Set<Catalogue> catalogue = new HashSet<>();
         if (strCatalogue == null) {
             return new ResponseEntity<>(new_book, HttpStatus.BAD_REQUEST);
         } else {
             Catalogue bookCatalogue =
-                    catalogueRepository.findByCatalogue(String.valueOf(strCatalogue)).orElseThrow(() -> new ResourceNotFoundException("No catalogue found"));
+                    catalogueRepository.findByCatalogue(String.valueOf(strCatalogue)).orElseThrow(()
+                    -> new ResourceNotFoundException("No catalogue found"));
             catalogue.add(bookCatalogue);
         }
 
-        logger.error("Book catalogue   : " + catalogue);
+        logger.error("Book catalogue : " + catalogue);
+        logger.error("get catalogue before: " + new_book.getCatalogue());
         new_book.setCatalogue(catalogue);
-        logger.error("get catalogue" + new_book.getCatalogue());
-        bookRepository.save(new_book);
+        logger.error("get catalogue after: " + new_book.getCatalogue());
+        bookRepository.save(new Book(bookRequest.getTitle(), bookRequest.getAuthor(), true));
         return new ResponseEntity<>(new_book, HttpStatus.CREATED);
 
     }
