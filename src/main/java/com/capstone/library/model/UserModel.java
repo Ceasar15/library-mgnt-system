@@ -26,7 +26,7 @@ public class UserModel {
 
     @ManyToMany()
     @JoinTable(name = "user_and_roles", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "roleType_id"))
+            inverseJoinColumns = @JoinColumn(name = "role_type_id"))
     private Set<RoleType> roleType = new HashSet<>();
 
     public UserModel() {

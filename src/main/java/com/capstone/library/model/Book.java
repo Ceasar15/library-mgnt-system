@@ -36,14 +36,6 @@ public class Book {
         this.isAvailable = isAvailable;
     }
 
-    public Book(Long id, String title, String author, Boolean isAvailable, Set<Catalogue> catalogue) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.isAvailable = isAvailable;
-        this.catalogue = catalogue;
-    }
-
     public Long getId() {
         return id;
     }
