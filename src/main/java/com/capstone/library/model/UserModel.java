@@ -22,7 +22,7 @@ public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long id;
+    private String id;
 
     @NotBlank
     @Size(max = 50)
@@ -50,9 +50,8 @@ public class UserModel {
         this.email = email;
     }
 
-    public UserModel(String username, String password, Set<RoleType> roleType) {
+    public UserModel(String username, Set<RoleType> roleType) {
         this.username = username;
-        this.password = password;
         this.roleType = roleType;
     }
 
@@ -108,7 +107,7 @@ public class UserModel {
 
 
     public void setPassword() {
-        this.password = password;
+        this.password = generatePassayPassword();
     }
 
     public Set<RoleType> getRoleType() {
@@ -119,4 +118,8 @@ public class UserModel {
         this.roleType = roleType;
     }
 
+
+    public String getId() {
+        return id;
+    }
 }
