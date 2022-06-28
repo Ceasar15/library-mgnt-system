@@ -1,11 +1,19 @@
 package com.capstone.library.model;
 
 
+import org.passay.CharacterData;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.PasswordGenerator;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
 @Entity
 @Table(name = "users")
@@ -21,6 +29,11 @@ public class UserModel {
     private String username;
 
     @NotBlank
+    @Size(max = 255)
+    @Email()
+    private String email;
+
+    @NotBlank
     @Size(max = 120)
     private String password;
 
@@ -32,9 +45,9 @@ public class UserModel {
     public UserModel() {
     }
 
-    public UserModel(String username, String password) {
+    public UserModel(String username, String email) {
         this.username = username;
-        this.password = password;
+        this.email = email;
     }
 
     public UserModel(String username, String password, Set<RoleType> roleType) {
@@ -51,11 +64,50 @@ public class UserModel {
         this.username = username;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public String generatePassayPassword() {
+        PasswordGenerator gen = new PasswordGenerator();
+        CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
+        CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
+        lowerCaseRule.setNumberOfCharacters(2);
+
+        CharacterData upperCaseChars = EnglishCharacterData.UpperCase;
+        CharacterRule upperCaseRule = new CharacterRule(upperCaseChars);
+        upperCaseRule.setNumberOfCharacters(2);
+
+        CharacterData digitChars = EnglishCharacterData.Digit;
+        CharacterRule digitRule = new CharacterRule(digitChars);
+        digitRule.setNumberOfCharacters(2);
+
+        CharacterData specialChars = new CharacterData() {
+            public String getErrorCode() {
+                return ERROR_CODE;
+            }
+
+            public String getCharacters() {
+                return "!@#$%^&*()_+";
+            }
+        };
+        CharacterRule splCharRule = new CharacterRule(specialChars);
+        splCharRule.setNumberOfCharacters(2);
+
+        String password = gen.generatePassword(10, splCharRule, lowerCaseRule, upperCaseRule, digitRule);
+        return password;
+    }
+
+
+    public void setPassword() {
         this.password = password;
     }
 

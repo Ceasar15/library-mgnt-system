@@ -32,10 +32,11 @@ public class UserController {
 
     @PostMapping("/createLibrarian")
     public ResponseEntity<?> createLibrarian(@RequestBody UserRequest userRequest) {
-        UserModel user = new UserModel(userRequest.getUsername(), userRequest.getPassword());
+        UserModel user = new UserModel(userRequest.getUsername(), userRequest.getEmail());
         String strRoleType = userRequest.getRoleType();
         Set<RoleType> roleType = new HashSet<>();
-
+        logger.warn("Request: " + userRequest);
+        logger.info("roleType: " + strRoleType);
         if (strRoleType == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } else {
@@ -43,6 +44,7 @@ public class UserController {
                     roleTypeRepository.findByName(Actors.valueOf(strRoleType)).orElseThrow(() -> new ResourceNotFoundException("This role does not exists!"));
             roleType.add(roleType1);
         }
+        user.setPassword();
         user.setRoleType(roleType);
         UserModel responseUser = userRepository.save(user);
         logger.info("User of name: " + responseUser.getUsername() + " is created.");

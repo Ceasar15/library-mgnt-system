@@ -8,17 +8,16 @@ public class UserRequest {
     private String username;
 
     @NotBlank
-    private String password;
+    private String roleType;
 
     @NotBlank
-    private String roleType;
+    private String email;
 
     public UserRequest() {
     }
 
-    public UserRequest(String username, String password, String roleType) {
+    public UserRequest(String username, String roleType) {
         this.username = username;
-        this.password = password;
         this.roleType = roleType;
     }
 
@@ -31,12 +30,12 @@ public class UserRequest {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getRoleType() {
@@ -46,4 +45,11 @@ public class UserRequest {
     public void setRoleType(String roleType) {
         this.roleType = roleType;
     }
+
+    @Override
+    public String toString() {
+        return "UserRequest{" + "username='" + username + '\'' + "," + " roleType='" + roleType + '\'' + '}';
+    }
+
+
 }
