@@ -64,7 +64,7 @@ public class BookController {
     @GetMapping("/getAllBooks")
     public ResponseEntity<List<Book>> getAllBooks() {
         try {
-            List<Book> book = new ArrayList<Book>();
+            List<Book> book;
             book = bookRepository.findByIsAvailable(true);
 //                .orElseThrow(() -> new ResourceNotFoundException(
 //                "Not even one book is available!"));
