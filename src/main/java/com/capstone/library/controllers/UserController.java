@@ -83,6 +83,7 @@ public class UserController {
         logger.info("Login Request: " + loginRequest);
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        logger.info("Authentication : " + authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         logger.info("JWT : " + jwt);
@@ -97,42 +98,35 @@ public class UserController {
             MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already " +
-                    "taken!"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already " + "taken!"));
         }
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in " +
-                    "use!"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in " + "use!"));
         }
         // Create new user's account
         UserModel user = new UserModel(signUpRequest.getUsername(), signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
         String strRoles = signUpRequest.getRoleType();
+        logger.error(strRoles);
         Set<RoleType> roles = new HashSet<>();
         if (strRoles == null) {
-            RoleType userRole =
-                    roleTypeRepository.findByName(Actors.User).orElseThrow(() -> new RuntimeException(
-                            "Error: Role user is not found."));
-            roles.add(userRole);
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: No role provided! "));
         } else {
-            strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin":
-                        RoleType adminRole =
-                                roleTypeRepository.findByName(Actors.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error: Role admin is not " + "found."));
-                        roles.add(adminRole);
-                        break;
-                    case "mod":
-                        RoleType modRole =
-                                roleTypeRepository.findByName(Actors.ROLE_MODERATOR).orElseThrow(() -> new RuntimeException("Error: Role mod is not found" + "."));
-                        roles.add(modRole);
-                        break;
-                    default:
-                        RoleType userRole =
-                                roleTypeRepository.findByName(Actors.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role user is not found" + "."));
-                        roles.add(userRole);
-                }
-            });
+            if (strRoles.equals("Librarian")) {
+                RoleType Librarian =
+                        roleTypeRepository.findByName(Actors.valueOf(strRoles)).orElseThrow(() -> new ResourceNotFoundException("Error: Role librarian is not " + "found."));
+                roles.add(Librarian);
+            } else if (strRoles.equals("Admin")) {
+                RoleType Admin =
+                        roleTypeRepository.findByName(Actors.valueOf(strRoles)).orElseThrow(() -> new ResourceNotFoundException("Error: Role admin is not found" + "."));
+                roles.add(Admin);
+            } else {
+                RoleType User =
+                        roleTypeRepository.findByName(Actors.valueOf(strRoles)).orElseThrow(() -> new ResourceNotFoundException("Error: Role user is not found" + "."));
+                roles.add(User);
+            }
+            ;
+
         }
         user.setRoleType(roles);
         userRepository.save(user);
