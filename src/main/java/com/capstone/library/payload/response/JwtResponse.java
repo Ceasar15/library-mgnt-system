@@ -11,12 +11,12 @@ public class JwtResponse {
     private List<String> roleType;
 
 
-    public JwtResponse(String token, String type, String username, String email, List<String> roleType) {
-        this.token = token;
-        this.type = type;
+    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+        this.token = accessToken;
+        this.id = id;
         this.username = username;
         this.email = email;
-        this.roleType = roleType;
+        this.roleType = roles;
     }
 
     public JwtResponse() {
