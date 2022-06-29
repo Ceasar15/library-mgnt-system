@@ -1,28 +1,30 @@
 package com.capstone.library.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "book")
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     private String title;
 
-    @Column(name = "author", nullable = false)
+    @Column(name = "author")
     private String author;
 
-    @Column(name = "isAvailable", nullable = false)
+    @Column(name = "isAvailable")
     private Boolean isAvailable;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "book_catalogue", joinColumns = @JoinColumn(name = "book"), inverseJoinColumns =
+    @JoinColumn(name = "catalogue"))
+    private Set<Catalogue> catalogue = new HashSet<>();
 
-
-    @ManyToOne
-    @JoinColumn(name = "catalogue_id", nullable = false)
-    private Catalogue catalogue;
 
     public Book() {
 
@@ -66,11 +68,12 @@ public class Book {
         isAvailable = available;
     }
 
-    public Catalogue getCatalogue() {
+
+    public Set<Catalogue> getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(Catalogue catalogue) {
+    public void setCatalogue(Set<Catalogue> catalogue) {
         this.catalogue = catalogue;
     }
 }

@@ -6,11 +6,11 @@ import javax.persistence.*;
 @Table(name = "catalogue")
 public class Catalogue {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "catalogue", nullable = false)
+    @Column(name = "catalogue")
     private String catalogue;
 
     public Catalogue() {
@@ -39,6 +39,6 @@ public class Catalogue {
 
     @Override
     public String toString() {
-        return "Catalogue{} " + catalogue + " with id " + id + " ";
+        return "Catalogue " + catalogue + " with id " + id + " ";
     }
 }
