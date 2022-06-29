@@ -3,7 +3,7 @@ package com.capstone.library.controllers;
 import com.capstone.library.exception.ResourceNotFoundException;
 import com.capstone.library.model.Book;
 import com.capstone.library.model.Catalogue;
-import com.capstone.library.payload.request.BookRequest;
+import com.capstone.library.payload.request.CreateBookRequest;
 import com.capstone.library.repository.BookRepository;
 import com.capstone.library.repository.CatalogueRepository;
 import org.slf4j.Logger;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,9 +33,9 @@ public class BookController {
     }
 
     @PostMapping("/createBook")
-    public ResponseEntity<?> createBook(@RequestBody BookRequest bookRequest) {
-        Book new_book = new Book(bookRequest.getTitle(), bookRequest.getAuthor(), true);
-        String strCatalogue = bookRequest.getCatalogue();
+    public ResponseEntity<?> createBook(@RequestBody CreateBookRequest createBookRequest) {
+        Book new_book = new Book(createBookRequest.getTitle(), createBookRequest.getAuthor(), true);
+        String strCatalogue = createBookRequest.getCatalogue();
         Set<Catalogue> catalogue = new HashSet<>();
         if (strCatalogue == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

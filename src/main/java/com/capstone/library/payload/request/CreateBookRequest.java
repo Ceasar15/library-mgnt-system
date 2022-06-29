@@ -2,7 +2,7 @@ package com.capstone.library.payload.request;
 
 import javax.validation.constraints.NotBlank;
 
-public class BookRequest {
+public class CreateBookRequest {
 
     @NotBlank
     private String title;
@@ -12,7 +12,7 @@ public class BookRequest {
 
     private String catalogue;
 
-    public BookRequest(String title, String author, String catalogue) {
+    public CreateBookRequest(String title, String author, String catalogue) {
         this.title = title;
         this.author = author;
         this.catalogue = catalogue;
