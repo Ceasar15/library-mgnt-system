@@ -50,6 +50,12 @@ public class UserModel {
         this.email = email;
     }
 
+    public UserModel(Long id, String username, String email) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+    }
+
     public UserModel(String username, Set<RoleType> roleType) {
         this.username = username;
         this.roleType = roleType;

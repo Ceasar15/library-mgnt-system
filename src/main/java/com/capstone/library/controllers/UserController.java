@@ -9,6 +9,7 @@ import com.capstone.library.payload.request.UserRequest;
 import com.capstone.library.payload.response.JwtResponse;
 import com.capstone.library.payload.response.MessageResponse;
 import com.capstone.library.repository.RoleTypeRepository;
+import com.capstone.library.repository.UserModelMini;
 import com.capstone.library.repository.UserRepository;
 import com.capstone.library.security.jwt.JwtUtils;
 import com.capstone.library.security.services.UserDetailsImpl;
@@ -48,7 +49,7 @@ public class UserController {
     @Autowired
     JwtUtils jwtUtils;
 
-    @PostMapping("/createLibrarian")
+    @PostMapping("/admin/createLibrarian")
     public ResponseEntity<?> createLibrarian(@RequestBody UserRequest userRequest) {
         UserModel user = new UserModel(userRequest.getUsername(), userRequest.getEmail());
         String strRoleType = userRequest.getRoleType();
@@ -67,11 +68,11 @@ public class UserController {
         return new ResponseEntity<>(responseUser, HttpStatus.CREATED);
     }
 
-    @GetMapping("/getAllLibrarians")
+    @GetMapping("/admin/getAllLibrarians")
     public ResponseEntity<?> getAllLibrarians() {
         try {
-            List<UserModel> librarians;
-            librarians = userRepository.findAll();
+            List<UserModelMini> librarians;
+            librarians = userRepository.findAllLibrarians();
             return new ResponseEntity<>(librarians, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -80,13 +81,11 @@ public class UserController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        logger.info("Login Request: " + loginRequest);
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         logger.info("Authentication : " + authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-        logger.info("JWT : " + jwt);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles =
                 userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
@@ -107,7 +106,6 @@ public class UserController {
         UserModel user = new UserModel(signUpRequest.getUsername(), signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
         String strRoles = signUpRequest.getRoleType();
-        logger.error(strRoles);
         Set<RoleType> roles = new HashSet<>();
         if (strRoles == null) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: No role provided! "));
