@@ -22,7 +22,7 @@ import static org.passay.DigestDictionaryRule.ERROR_CODE;
 @Table(name = "users")
 public class UserModel {
     private static final Logger logger = LoggerFactory.getLogger(UserModel.class);
-    private final String finalPassword = generatePassayPassword();
+    public final String finalPassword = generatePassayPassword();
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -122,10 +122,7 @@ public class UserModel {
 
 
     public void setPassword() {
-        logger.info("final set password: " + finalPassword);
-        String cc = new BCryptPasswordEncoder().encode(finalPassword);
-        logger.info("New encoded password: " + cc);
-        this.password = cc;
+        this.password = new BCryptPasswordEncoder().encode(finalPassword);
     }
 
     public Set<RoleType> getRoleType() {

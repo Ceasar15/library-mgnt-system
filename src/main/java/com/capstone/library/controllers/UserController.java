@@ -28,9 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -64,8 +62,13 @@ public class UserController {
         user.setPassword();
         user.setRoleType(roleType);
         UserModel responseUser = userRepository.save(user);
-        logger.info("User of name: " + responseUser.getUsername() + " is created.");
-        return new ResponseEntity<>(responseUser, HttpStatus.CREATED);
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", responseUser.getId());
+        response.put("username", responseUser.getUsername());
+        response.put("email", responseUser.getEmail());
+        response.put("generatedPassword", responseUser.finalPassword);
+        response.put("role", responseUser.getRoleType());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/admin/getAllLibrarians")
