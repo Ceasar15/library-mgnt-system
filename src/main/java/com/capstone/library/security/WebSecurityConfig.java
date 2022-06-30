@@ -36,6 +36,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
+//    @Override
+//    public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
+//        configurer
+//                .inMemory()
+//                .withClient(clientId)
+//                .secret(encode(clientSecret))
+//                .authorizedGrantTypes(grantType)
+//                .scopes(scopeRead, scopeWrite)
+//                .resourceIds(resourceIds);
+//    }
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {

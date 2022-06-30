@@ -58,7 +58,7 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } else {
             RoleType roleType1 =
-                    roleTypeRepository.findByName(Actors.valueOf(strRoleType)).orElseThrow(() -> new ResourceNotFoundException("This role does not exists!"));
+                    roleTypeRepository.findByRole(Actors.valueOf(strRoleType)).orElseThrow(() -> new ResourceNotFoundException("This role does not exists!"));
             roleType.add(roleType1);
         }
         user.setPassword();
@@ -112,15 +112,15 @@ public class UserController {
         } else {
             if (strRoles.equals("Librarian")) {
                 RoleType Librarian =
-                        roleTypeRepository.findByName(Actors.valueOf(strRoles)).orElseThrow(() -> new ResourceNotFoundException("Error: Role librarian is not " + "found."));
+                        roleTypeRepository.findByRole(Actors.valueOf(strRoles)).orElseThrow(() -> new ResourceNotFoundException("Error: Role librarian is not " + "found."));
                 roles.add(Librarian);
             } else if (strRoles.equals("Admin")) {
                 RoleType Admin =
-                        roleTypeRepository.findByName(Actors.valueOf(strRoles)).orElseThrow(() -> new ResourceNotFoundException("Error: Role admin is not found" + "."));
+                        roleTypeRepository.findByRole(Actors.valueOf(strRoles)).orElseThrow(() -> new ResourceNotFoundException("Error: Role admin is not found" + "."));
                 roles.add(Admin);
             } else {
                 RoleType User =
-                        roleTypeRepository.findByName(Actors.valueOf(strRoles)).orElseThrow(() -> new ResourceNotFoundException("Error: Role user is not found" + "."));
+                        roleTypeRepository.findByRole(Actors.valueOf(strRoles)).orElseThrow(() -> new ResourceNotFoundException("Error: Role user is not found" + "."));
                 roles.add(User);
             }
             ;

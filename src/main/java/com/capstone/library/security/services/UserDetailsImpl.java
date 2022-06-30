@@ -3,6 +3,8 @@ package com.capstone.library.security.services;
 
 import com.capstone.library.model.UserModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,10 +18,10 @@ import java.util.stream.Collectors;
 public class UserDetailsImpl implements UserDetails {
     @Serial
     private static final long serialVersionUID = 1L;
+    private static final Logger logger = LoggerFactory.getLogger(UserDetailsImpl.class);
     private final Long id;
     private final String username;
     private final String email;
-
     @JsonIgnore
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
@@ -34,10 +36,12 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public static UserDetailsImpl build(UserModel user) {
+        logger.warn("user details here :" + user);
         List<GrantedAuthority> authorities =
-                user.getRoleType().stream().map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
+                user.getRoleType().stream().map(role -> new SimpleGrantedAuthority(role.getRole().name())).collect(Collectors.toList());
         return new UserDetailsImpl(user.getId(), user.getUsername(), user.getEmail(),
                 user.getPassword(), authorities);
+        //new BCryptPasswordEncoder().encode(user.getPassword())
     }
 
     @Override
