@@ -3,6 +3,7 @@ package com.capstone.library.controllers;
 import com.capstone.library.model.Actors;
 import com.capstone.library.model.RoleType;
 import com.capstone.library.model.UserModel;
+import com.capstone.library.payload.request.ChangePasswordRequest;
 import com.capstone.library.payload.request.LoginRequest;
 import com.capstone.library.payload.request.SignupRequest;
 import com.capstone.library.payload.request.UserRequest;
@@ -59,7 +60,8 @@ public class UserController {
                     roleTypeRepository.findByRole(Actors.valueOf(strRoleType)).orElseThrow(() -> new ResourceNotFoundException("This role does not exists!"));
             roleType.add(roleType1);
         }
-        user.setPassword();
+
+        user.setPassword(encoder.encode(user.finalPassword));
         user.setRoleType(roleType);
         UserModel responseUser = userRepository.save(user);
         Map<String, Object> response = new HashMap<>();
@@ -132,5 +134,22 @@ public class UserController {
         user.setRoleType(roles);
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @PutMapping(value = "/changePassword", consumes = MediaType.APPLICATION_JSON_VALUE, produces =
+            MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserModel user = userRepository.findByEmail(((UserDetailsImpl) principal).getEmail());
+
+        if (!Objects.equals(changePasswordRequest.getNewPassword(),
+                changePasswordRequest.getConfirmPassword())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Passwords do not match!"));
+        }
+
+        user.setPassword(encoder.encode(changePasswordRequest.getConfirmPassword()));
+        userRepository.save(user);
+        return ResponseEntity.ok(new MessageResponse("Password changed Successfully"));
     }
 }

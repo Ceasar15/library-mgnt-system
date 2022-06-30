@@ -9,5 +9,4 @@ public interface UserModelMini {
 
     String getRole();
 
-
 }

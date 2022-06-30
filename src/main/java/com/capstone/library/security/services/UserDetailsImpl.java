@@ -41,7 +41,6 @@ public class UserDetailsImpl implements UserDetails {
                 user.getRoleType().stream().map(role -> new SimpleGrantedAuthority(role.getRole().name())).collect(Collectors.toList());
         return new UserDetailsImpl(user.getId(), user.getUsername(), user.getEmail(),
                 user.getPassword(), authorities);
-        //new BCryptPasswordEncoder().encode(user.getPassword())
     }
 
     @Override

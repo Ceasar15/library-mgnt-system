@@ -18,7 +18,7 @@ public class Book {
     @Column(name = "author")
     private String author;
 
-    @Column(name = "isAvailable")
+    @Column(name = "is_available")
     private Boolean isAvailable;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book_catalogue", joinColumns = @JoinColumn(name = "book"), inverseJoinColumns =

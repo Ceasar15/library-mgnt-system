@@ -121,8 +121,8 @@ public class UserModel {
     }
 
 
-    public void setPassword() {
-        this.password = new BCryptPasswordEncoder().encode(finalPassword);
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Set<RoleType> getRoleType() {

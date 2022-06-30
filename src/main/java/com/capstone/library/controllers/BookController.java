@@ -65,8 +65,6 @@ public class BookController {
         try {
             List<Book> book;
             book = bookRepository.findByIsAvailable(true);
-//                .orElseThrow(() -> new ResourceNotFoundException(
-//                "Not even one book is available!"));
             return new ResponseEntity<>(book, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
