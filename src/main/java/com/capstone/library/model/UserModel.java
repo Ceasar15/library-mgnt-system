@@ -7,7 +7,6 @@ import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -41,7 +40,7 @@ public class UserModel {
     @Size(max = 120)
     private String password;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_and_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_type_id"))
     private Set<RoleType> roleType = new HashSet<>();
@@ -91,6 +90,10 @@ public class UserModel {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String generatePassayPassword() {
         PasswordGenerator gen = new PasswordGenerator();
         CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
@@ -118,11 +121,6 @@ public class UserModel {
         splCharRule.setNumberOfCharacters(2);
 
         return gen.generatePassword(10, splCharRule, lowerCaseRule, upperCaseRule, digitRule);
-    }
-
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Set<RoleType> getRoleType() {

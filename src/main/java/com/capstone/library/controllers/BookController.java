@@ -3,7 +3,7 @@ package com.capstone.library.controllers;
 import com.capstone.library.exception.ResourceNotFoundException;
 import com.capstone.library.model.Book;
 import com.capstone.library.model.Catalogue;
-import com.capstone.library.payload.request.CreateBookRequest;
+import com.capstone.library.payload.request.CreateBook;
 import com.capstone.library.repository.BookRepository;
 import com.capstone.library.repository.CatalogueRepository;
 import org.slf4j.Logger;
@@ -33,9 +33,9 @@ public class BookController {
     }
 
     @PostMapping("/createBook")
-    public ResponseEntity<?> createBook(@RequestBody CreateBookRequest createBookRequest) {
-        Book new_book = new Book(createBookRequest.getTitle(), createBookRequest.getAuthor(), true);
-        String strCatalogue = createBookRequest.getCatalogue();
+    public ResponseEntity<?> createBook(@RequestBody CreateBook createBook) {
+        Book new_book = new Book(createBook.getTitle(), createBook.getAuthor(), true);
+        String strCatalogue = createBook.getCatalogue();
         Set<Catalogue> catalogue = new HashSet<>();
         if (strCatalogue == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -70,6 +70,7 @@ public class BookController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
-
     }
+
+
 }
