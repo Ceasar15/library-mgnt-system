@@ -1,21 +1,31 @@
 package com.capstone.library.controllers;
 
 
+import com.capstone.library.exception.ResourceNotFoundException;
+import com.capstone.library.model.Book;
 import com.capstone.library.model.BookRequestModel;
+import com.capstone.library.model.UserModel;
+import com.capstone.library.payload.request.RequestForABook;
 import com.capstone.library.payload.response.MessageResponse;
+import com.capstone.library.repository.AllBookRequest;
+import com.capstone.library.repository.BookRepository;
 import com.capstone.library.repository.BookRequestRepository;
+import com.capstone.library.repository.UserRepository;
+import com.capstone.library.security.services.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import static com.capstone.library.model.ApprovalStatus.Accepted;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -25,6 +35,10 @@ public class BookRequestController {
 
     @Autowired
     BookRequestRepository bookRequestRepository;
+    @Autowired
+    BookRepository bookRepository;
+    @Autowired
+    UserRepository userRepository;
 
     public BookRequestController(BookRequestRepository bookRequestRepository) {
         this.bookRequestRepository = bookRequestRepository;
@@ -35,14 +49,44 @@ public class BookRequestController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         try {
-            List<BookRequestModel> allBookRequest;
-            allBookRequest = bookRequestRepository.findAll();
+            List<AllBookRequest> allBookRequest;
+            allBookRequest = bookRequestRepository.findAllBookRequests();
+
             return new ResponseEntity<>(allBookRequest, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new MessageResponse("No book request available!"));
 
         }
 
+    }
+
+    @PostMapping("/user/makeBookRequest")
+    public ResponseEntity<?> makeBookRequest(@RequestBody RequestForABook requestForABook) {
+        System.out.println("request: " + requestForABook.getId());
+
+
+        Long book_id = requestForABook.getId();
+        BookRequestModel bookRequest = new BookRequestModel(requestForABook.getId());
+        LocalDateTime date = LocalDateTime.now();
+        bookRequest.setDateRequested(date);
+//      save the book
+        Set<Book> book = new HashSet<>();
+        Book bookInstance =
+                bookRepository.findById(book_id).orElseThrow(() -> new ResourceNotFoundException("No " + "book of id:" + book_id + " found"));
+        book.add(bookInstance);
+//         save the user
+        Set<UserModel> user = new HashSet<>();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserModel userInstance = userRepository.findByEmail(((UserDetailsImpl) principal).getEmail());
+        user.add(userInstance);
+
+        bookRequest.setDateReturned(null);
+        bookRequest.setApprovalStatus(Accepted);
+        bookRequest.setUser(user);
+        bookRequest.setBook(book);
+        BookRequestModel savedBookRequestBook = bookRequestRepository.save(bookRequest);
+
+        return ResponseEntity.ok("Book booked!");
     }
 
 

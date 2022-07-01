@@ -2,7 +2,7 @@ package com.capstone.library.model;
 
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,10 +17,10 @@ public class BookRequestModel {
     private long id;
 
     @Column(name = "date_requested")
-    private Date dateRequested;
+    private LocalDateTime dateRequested;
 
     @Column(name = "date_returned")
-    private Date dateReturned;
+    private LocalDateTime dateReturned;
 
     @Column(name = "approval_status")
     private ApprovalStatus approvalStatus;
@@ -36,8 +36,8 @@ public class BookRequestModel {
     private Set<Book> book = new HashSet<>();
 
 
-    public BookRequestModel(Date dateRequested, Date dateReturned, ApprovalStatus approvalStatus,
-                            Set<UserModel> user, Set<Book> book) {
+    public BookRequestModel(LocalDateTime dateRequested, LocalDateTime dateReturned,
+                            ApprovalStatus approvalStatus, Set<UserModel> user, Set<Book> book) {
         this.dateRequested = dateRequested;
         this.dateReturned = dateReturned;
         this.approvalStatus = approvalStatus;
@@ -48,6 +48,10 @@ public class BookRequestModel {
     public BookRequestModel() {
     }
 
+    public BookRequestModel(long id) {
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }
@@ -56,19 +60,19 @@ public class BookRequestModel {
         this.id = id;
     }
 
-    public Date getDateRequested() {
+    public LocalDateTime getDateRequested() {
         return dateRequested;
     }
 
-    public void setDateRequested(Date dateRequested) {
+    public void setDateRequested(LocalDateTime dateRequested) {
         this.dateRequested = dateRequested;
     }
 
-    public Date getDateReturned() {
+    public LocalDateTime getDateReturned() {
         return dateReturned;
     }
 
-    public void setDateReturned(Date dateReturned) {
+    public void setDateReturned(LocalDateTime dateReturned) {
         this.dateReturned = dateReturned;
     }
 

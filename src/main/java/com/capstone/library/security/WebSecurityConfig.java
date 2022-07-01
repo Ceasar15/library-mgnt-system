@@ -36,17 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-//    @Override
-//    public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
-//        configurer
-//                .inMemory()
-//                .withClient(clientId)
-//                .secret(encode(clientSecret))
-//                .authorizedGrantTypes(grantType)
-//                .scopes(scopeRead, scopeWrite)
-//                .resourceIds(resourceIds);
-//    }
-
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -60,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().antMatchers("/user/admin/").hasAnyAuthority("Admin").antMatchers("/bookRequest/admin/").hasAnyAuthority("Admin").antMatchers("/user/**").permitAll().antMatchers("/test/**").permitAll().anyRequest().authenticated();
+        http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().antMatchers("/user/admin/").hasAnyAuthority("Admin").antMatchers("/book/createBook/**").hasAnyAuthority("Admin", "Librarian").antMatchers("/catalogue/createCatalogue/**").hasAnyAuthority("Admin", "Librarian").antMatchers("/bookRequest/admin/**").hasAnyAuthority("Admin", "Librarian").antMatchers("/bookRequest/user/**").hasAnyAuthority("User").antMatchers("/book/**").permitAll().antMatchers("/user/**").permitAll().antMatchers("/test/**").permitAll().anyRequest().authenticated();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
