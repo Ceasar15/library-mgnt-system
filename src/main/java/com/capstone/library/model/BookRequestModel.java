@@ -100,4 +100,10 @@ public class BookRequestModel {
     public void setBook(Set<Book> book) {
         this.book = book;
     }
+
+    @Override
+    public String toString() {
+        return "BookRequestModel{" + "id=" + id + ", dateRequested=" + dateRequested + ", dateReturned"
+                + "=" + dateReturned + ", approvalStatus=" + approvalStatus + ", user=" + user + ", " + "book=" + book + '}';
+    }
 }

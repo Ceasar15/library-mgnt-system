@@ -57,7 +57,6 @@ public class BookRequestController {
             return ResponseEntity.badRequest().body(new MessageResponse("No book request available!"));
 
         }
-
     }
 
     @PostMapping("/user/makeBookRequest")
@@ -89,5 +88,26 @@ public class BookRequestController {
         return ResponseEntity.ok("Book booked!");
     }
 
+    @PutMapping("/admin/approveBookRequest/{id}/{bookId}")
+    public ResponseEntity<?> approveBookRequest(@PathVariable("id") Long id,
+                                                @PathVariable("bookId") Long bookId) {
+        try {
+            BookRequestModel bookRequest =
+                    bookRequestRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No" + " " + "book request with id: " + id + " found"));
 
+            Book bookInstance =
+                    bookRepository.findById(bookId).orElseThrow(() -> new ResourceNotFoundException(
+                            "No " + "book of id:" + bookRequest.getBook() + " found"));
+
+            bookInstance.setAvailable(Boolean.FALSE);
+            bookRepository.save(bookInstance);
+            bookRequest.setApprovalStatus(Accepted);
+            bookRequestRepository.save(bookRequest);
+            return ResponseEntity.ok("Book Approved Successfully!");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body("Error:" + e.getMessage());
+        }
+
+    }
 }

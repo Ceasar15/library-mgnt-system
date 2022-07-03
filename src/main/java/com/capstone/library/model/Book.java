@@ -76,4 +76,9 @@ public class Book {
     public void setCatalogue(Set<Catalogue> catalogue) {
         this.catalogue = catalogue;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" + "id=" + id + ", title='" + title + '\'' + ", author='" + author + '\'' + ", " + "isAvailable=" + isAvailable + ", catalogue=" + catalogue + '}';
+    }
 }

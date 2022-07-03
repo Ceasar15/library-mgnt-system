@@ -13,11 +13,16 @@ public interface AllBookRequest {
 
     ApprovalStatus getApproval_status();
 
-    String getBook();
-//    String getUsers();
-//
-//    String getUserUsername();
-//
-//
-//    String getBookTitle();
+    String getBookId();
+
+    String getTitle();
+
+    String getAuthor();
+
+    String getUserId();
+
+    String getEmail();
+
+    String getUsername();
+
 }
