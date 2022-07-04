@@ -9,7 +9,6 @@ import com.capstone.library.repository.CatalogueRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -83,15 +82,13 @@ public class BookController {
         return outputStream.toByteArray();
     }
 
-    //    @PostMapping("/createBook")
     @RequestMapping(value = "/createBook", method = RequestMethod.POST, consumes =
             {"multipart/form" + "-data"})
     public ResponseEntity<?> createBook(@ModelAttribute CreateBook createBook) throws IOException {
         Book new_book = new Book(createBook.getTitle(), createBook.getAuthor(), true);
         String strCatalogue = createBook.getCatalogue();
         MultipartFile imageFile = createBook.getImageFile();
-//        System.out.println("Original Image Byte Size - " + imageFile.getBytes().length);
-//        System.out.println("Original Image Byte Size - " + imageFile.getName());
+
         Set<Catalogue> catalogue = new HashSet<>();
         if (strCatalogue == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -100,25 +97,21 @@ public class BookController {
                     catalogueRepository.findByCatalogue(strCatalogue).orElseThrow(() -> new ResourceNotFoundException("No catalogue found"));
             catalogue.add(bookCatalogue);
         }
+
         new_book.setImage(imageFile.getBytes());
         new_book.setCatalogue(catalogue);
         Book responseBook = bookRepository.save(new_book);
-//        System.out.println("responseBook: " + Arrays.toString(responseBook.getImage()));
-//        ByteArrayResource resource = new ByteArrayResource(responseBook.getImage());
-//        System.out.println("resource:" + resource);
+
         return new ResponseEntity<>(responseBook, HttpStatus.CREATED);
-//        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).contentLength
-//        (resource.contentLength()).header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition
-//        .attachment().filename("whatever").build().toString()).body(resource);
+
 
     }
 
-    @GetMapping("/getBook/{id}")
-    public ResponseEntity<Book> getBook(@PathVariable("id") Long id) throws IOException {
+    @GetMapping(value = "/getBook/{id}")
+    public ResponseEntity<?> getBook(@PathVariable("id") Long id) {
         Book book =
                 bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No " +
                         "book with id: " + id + " found"));
-//        decompressBytes(book.getImage());
         return new ResponseEntity<>(book, HttpStatus.OK);
     }
 

@@ -1,10 +1,6 @@
 package com.capstone.library.model;
 
-import javax.imageio.ImageIO;
 import javax.persistence.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -91,11 +87,9 @@ public class Book {
         return "Book{" + "id=" + id + ", title='" + title + '\'' + ", author='" + author + '\'' + ", " + "isAvailable=" + isAvailable + ", catalogue=" + catalogue + ", image=" + Arrays.toString(image) + '}';
     }
 
-    public Image getImage() throws IOException {
-//        BufferedImage im = toBufferedImage(image);
-        BufferedImage img = ImageIO.read(new ByteArrayInputStream(image));
-        System.out.println("image: " + img);
-        return img;
+    public byte[] getImage() throws IOException {
+//        return ImageIO.read(new ByteArrayInputStream(image));
+        return image;
     }
 
     public void setImage(byte[] image) {
