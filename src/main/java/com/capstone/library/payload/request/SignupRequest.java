@@ -45,11 +45,11 @@ public class SignupRequest {
         this.password = password;
     }
 
-    public void setRoleType(String roleType) {
-        this.roleType = roleType;
-    }
-
     public String getRoleType() {
         return roleType;
+    }
+
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
     }
 }

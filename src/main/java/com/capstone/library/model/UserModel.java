@@ -5,6 +5,8 @@ import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -18,7 +20,8 @@ import static org.passay.DigestDictionaryRule.ERROR_CODE;
 @Entity
 @Table(name = "users")
 public class UserModel {
-
+    private static final Logger logger = LoggerFactory.getLogger(UserModel.class);
+    public final String finalPassword = generatePassayPassword();
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -37,7 +40,7 @@ public class UserModel {
     @Size(max = 120)
     private String password;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_and_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_type_id"))
     private Set<RoleType> roleType = new HashSet<>();
@@ -46,6 +49,12 @@ public class UserModel {
     }
 
     public UserModel(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
+
+    public UserModel(Long id, String username, String email) {
+        this.id = id;
         this.username = username;
         this.email = email;
     }
@@ -81,6 +90,10 @@ public class UserModel {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String generatePassayPassword() {
         PasswordGenerator gen = new PasswordGenerator();
         CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
@@ -107,13 +120,7 @@ public class UserModel {
         CharacterRule splCharRule = new CharacterRule(specialChars);
         splCharRule.setNumberOfCharacters(2);
 
-        String password = gen.generatePassword(10, splCharRule, lowerCaseRule, upperCaseRule, digitRule);
-        return password;
-    }
-
-
-    public void setPassword() {
-        this.password = generatePassayPassword();
+        return gen.generatePassword(10, splCharRule, lowerCaseRule, upperCaseRule, digitRule);
     }
 
     public Set<RoleType> getRoleType() {
@@ -127,5 +134,10 @@ public class UserModel {
 
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "UserModel{" + "id=" + id + ", username='" + username + '\'' + ", email='" + email + '\'' + ", password='" + password + '\'' + ", roleType=" + roleType + '}';
     }
 }
