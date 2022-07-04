@@ -1,6 +1,12 @@
 package com.capstone.library.model;
 
+import javax.imageio.ImageIO;
 import javax.persistence.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +31,9 @@ public class Book {
     @JoinColumn(name = "catalogue"))
     private Set<Catalogue> catalogue = new HashSet<>();
 
+
+    @Column(name = "image", unique = false, nullable = true, length = 100000)
+    private byte[] image;
 
     public Book() {
 
@@ -79,6 +88,17 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" + "id=" + id + ", title='" + title + '\'' + ", author='" + author + '\'' + ", " + "isAvailable=" + isAvailable + ", catalogue=" + catalogue + '}';
+        return "Book{" + "id=" + id + ", title='" + title + '\'' + ", author='" + author + '\'' + ", " + "isAvailable=" + isAvailable + ", catalogue=" + catalogue + ", image=" + Arrays.toString(image) + '}';
+    }
+
+    public Image getImage() throws IOException {
+//        BufferedImage im = toBufferedImage(image);
+        BufferedImage img = ImageIO.read(new ByteArrayInputStream(image));
+        System.out.println("image: " + img);
+        return img;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }
