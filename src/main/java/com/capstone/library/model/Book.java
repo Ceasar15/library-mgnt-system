@@ -1,8 +1,6 @@
 package com.capstone.library.model;
 
 import javax.persistence.*;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,8 +26,8 @@ public class Book {
     private Set<Catalogue> catalogue = new HashSet<>();
 
 
-    @Column(name = "image", unique = false, nullable = true, length = 100000)
-    private byte[] image;
+    @Column(name = "image", unique = false, nullable = true, length = 10000000)
+    private String image;
 
     public Book() {
 
@@ -84,15 +82,14 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" + "id=" + id + ", title='" + title + '\'' + ", author='" + author + '\'' + ", " + "isAvailable=" + isAvailable + ", catalogue=" + catalogue + ", image=" + Arrays.toString(image) + '}';
+        return "Book{" + "id=" + id + ", title='" + title + '\'' + ", author='" + author + '\'' + ", " + "isAvailable=" + isAvailable + ", catalogue=" + catalogue + ", image=" + image + '}';
     }
 
-    public byte[] getImage() throws IOException {
-//        return ImageIO.read(new ByteArrayInputStream(image));
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 }

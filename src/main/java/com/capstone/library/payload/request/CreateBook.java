@@ -14,7 +14,7 @@ public class CreateBook {
 
     private String catalogue;
 
-    private MultipartFile imageFile;
+    private String imageFile;
 
     public CreateBook(String title, String author, String catalogue) {
         this.title = title;
@@ -48,11 +48,11 @@ public class CreateBook {
     }
 
 
-    public MultipartFile getImageFile() {
+    public String getImageFile() {
         return imageFile;
     }
 
-    public void setImageFile(MultipartFile imageFile) {
+    public void setImageFile(String imageFile) {
         this.imageFile = imageFile;
     }
 }

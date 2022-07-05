@@ -4,15 +4,16 @@ import com.capstone.library.exception.ResourceNotFoundException;
 import com.capstone.library.model.Book;
 import com.capstone.library.model.Catalogue;
 import com.capstone.library.payload.request.CreateBook;
+import com.capstone.library.payload.response.MessageResponse;
 import com.capstone.library.repository.BookRepository;
 import com.capstone.library.repository.CatalogueRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -83,11 +84,15 @@ public class BookController {
     }
 
     @RequestMapping(value = "/createBook", method = RequestMethod.POST, consumes =
-            {"multipart/form" + "-data"})
-    public ResponseEntity<?> createBook(@ModelAttribute CreateBook createBook) throws IOException {
+            MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createBook(@RequestBody CreateBook createBook) throws IOException {
         Book new_book = new Book(createBook.getTitle(), createBook.getAuthor(), true);
         String strCatalogue = createBook.getCatalogue();
-        MultipartFile imageFile = createBook.getImageFile();
+        String imageFile = createBook.getImageFile();
+        if (imageFile.length() > 100000) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Image fle size " +
+                    "exceeds maximum size."));
+        }
 
         Set<Catalogue> catalogue = new HashSet<>();
         if (strCatalogue == null) {
@@ -98,11 +103,11 @@ public class BookController {
             catalogue.add(bookCatalogue);
         }
 
-        new_book.setImage(imageFile.getBytes());
+        new_book.setImage(imageFile);
         new_book.setCatalogue(catalogue);
-        Book responseBook = bookRepository.save(new_book);
+//        Book responseBook = bookRepository.save(new_book);
 
-        return new ResponseEntity<>(responseBook, HttpStatus.CREATED);
+        return new ResponseEntity<>(new_book, HttpStatus.CREATED);
 
 
     }
