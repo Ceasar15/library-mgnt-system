@@ -105,9 +105,8 @@ public class BookController {
 
         new_book.setImage(imageFile);
         new_book.setCatalogue(catalogue);
-//        Book responseBook = bookRepository.save(new_book);
-
-        return new ResponseEntity<>(new_book, HttpStatus.CREATED);
+        Book responseBook = bookRepository.save(new_book);
+        return new ResponseEntity<>(responseBook, HttpStatus.CREATED);
 
 
     }
