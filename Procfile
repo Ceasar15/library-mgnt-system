@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes:target/dependency/* com.capstone.library.LibraryMgntSystemApplication
+web: java -jar target/library-0.0.1-SNAPSHOT.jar
