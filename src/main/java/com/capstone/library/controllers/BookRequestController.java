@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.capstone.library.model.ApprovalStatus.Accepted;
+import static com.capstone.library.model.ApprovalStatus.Pending;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -80,7 +81,7 @@ public class BookRequestController {
         user.add(userInstance);
 
         bookRequest.setDateReturned(null);
-        bookRequest.setApprovalStatus(Accepted);
+        bookRequest.setApprovalStatus(Pending);
         bookRequest.setUser(user);
         bookRequest.setBook(book);
         BookRequestModel savedBookRequestBook = bookRequestRepository.save(bookRequest);
