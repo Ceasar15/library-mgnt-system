@@ -123,6 +123,7 @@ public class BookController {
     public ResponseEntity<List<Book>> getAllBooks() {
         try {
             List<Book> book;
+            System.out.println("here");
             book = bookRepository.findByIsAvailable(true);
             return new ResponseEntity<>(book, HttpStatus.OK);
         } catch (Exception e) {
